@@ -23,7 +23,7 @@ class TestSequence extends TestCase
 
         $numbers = $sequence->getMaxNumbers();
 
-        $this->assertEquals($numbers, [667, 234]);
+        $this->assertEquals($numbers,  [234, 667]);
     }
 
     public function testSecondCasePass()
@@ -33,6 +33,8 @@ class TestSequence extends TestCase
         $sequence = new Sequence($array, 4);
 
         $numbers = $sequence->getMaxNumbers();
+
+        sort($array);
 
         $this->assertEquals($numbers, $array);
     }

@@ -2,6 +2,8 @@
 
 namespace Test;
 
+use phpDocumentor\Reflection\Types\Iterable_;
+
 class Sequence
 {
     /** генератор или массив с интами
@@ -20,13 +22,12 @@ class Sequence
 
     private $logging = false;
 
-    /** Здесь не нравится, что $digits может быть и массивом и генератором,
-     * лучше было бы использовать отдельный сеттер для массива и отдельный сеттер для генератора
+    /**
      * MySequence constructor.
      * @param $digits
      * @param int $countOfNumbers
      */
-    public function __construct($digits, int $countOfNumbers)
+    public function __construct(Iterable $digits, int $countOfNumbers)
     {
         $this->digits = $digits;
 
@@ -54,36 +55,26 @@ class Sequence
             if (count($result) < $this->countOfNumbers) {
                 $result [] = $digit;
 
-                if ($this->logging) echo "Added new value: {$digit}\n";
-            } else {
-                if (!$minOfResult) $minOfResult = $this->getMinOfArray($result);
+                if ($this->logging) Logger::info("Added new value: {$digit}");
 
-                if ($digit > $minOfResult) {
-
-                    $key = array_search($minOfResult, $result);
-
-                    $result[$key] = $digit;
-
-                    if ($this->logging) echo "Replaced value: {$minOfResult}, added new value: {$digit}\n";
-
-                    $minOfResult = $this->getMinOfArray($result);
+                if (count($result) === $this->countOfNumbers) {
+                    sort($result);
                 }
+            } elseif ($digit > $result[0]) {
+                unset($result[0]);
+
+                $result[] = $digit;
+
+                if ($this->logging) Logger::info("Replaced value: {$minOfResult}, added new value: {$digit}");
+
+                sort($result);
             }
         }
 
         if ($this->logging and count($result) !== $this->countOfNumbers) {
-            echo "Wrong count of numbers, expected count: {$this->countOfNumbers}, actual: " . count($result);
+            Logger::info("Wrong count of numbers, expected count: {$this->countOfNumbers}, actual: " . count($result));
         }
 
         return $result;
-    }
-
-    /**
-     * @param array $array
-     * @return int|null
-     */
-    private function getMinOfArray(array $array): ?int
-    {
-        return min($array);
     }
 }
