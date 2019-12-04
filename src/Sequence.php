@@ -47,34 +47,16 @@ class Sequence
      */
     public function getMaxNumbers(): ?array
     {
-        $result = [];
+        $tree = new BinaryTree();
 
-        $minOfResult = null;
+        $tree->setExpectedCapacity($this->countOfNumbers);
 
         foreach ($this->digits as $digit) {
-            if (count($result) < $this->countOfNumbers) {
-                $result [] = $digit;
+            if ($this->logging) Logger::info("Added new value: {$digit}");
 
-                if ($this->logging) Logger::info("Added new value: {$digit}");
-
-                if (count($result) === $this->countOfNumbers) {
-                    sort($result);
-                }
-            } elseif ($digit > $result[0]) {
-                unset($result[0]);
-
-                $result[] = $digit;
-
-                if ($this->logging) Logger::info("Replaced value: {$minOfResult}, added new value: {$digit}");
-
-                sort($result);
-            }
+            $tree->insert($digit);
         }
 
-        if ($this->logging and count($result) !== $this->countOfNumbers) {
-            Logger::info("Wrong count of numbers, expected count: {$this->countOfNumbers}, actual: " . count($result));
-        }
-
-        return $result;
+        return $tree->getArrayValues();
     }
 }
