@@ -109,7 +109,7 @@ class BinaryTree
         if (is_null($subtree)) {
             $subtree = $node;
         } else {
-            if ($node->value < $subtree->value) {
+            if ($node->value <= $subtree->value) {
                 $this->insertNode($node, $subtree->left);
             } elseif ($node->value > $subtree->value) {
                 $this->insertNode($node, $subtree->right);
